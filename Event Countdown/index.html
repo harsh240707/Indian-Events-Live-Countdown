@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> INDIAN EVENTS LIVE COUNTDOWN </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: "Microsoft JhengHei", sans-serif;
+      font-weight: lighter;
+      font-style: italic;
+    }
+    .progress {
+      height: 8px;
+      background-color: #333;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background-color: #38bdf8;
+      transition: width 0.5s ease-in-out, background-color 0.3s ease-in-out;
+    }
+    .progress-bar.today {
+      background-color: #22c55e !important;
+    }
+    .event-date {
+      font-size: 0.875rem;
+      color: #a1a1aa;
+      float: right;
+    }
+    .search-box {
+      background-color: #1e293b;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      width: 100%;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body class="p-6">
+  <h1 class="text-6xl text-center mb-8 normal font-light" style="font-family: 'Arial Black';">
+    INDIAN EVENTS LIVE COUNTDOWN
+  </h1>
+
+  <div class="flex flex-col lg:flex-row gap-6">
+    <!-- Search Sidebar -->
+    <div class="lg:w-1/4 w-full">
+      <input id="search-input" type="text" placeholder="Search event..." class="search-box w-full text-white placeholder-gray-400">
+    </div>
+
+    <!-- Events Container -->
+    <div id="events-container" class="lg:w-3/4 w-full space-y-6"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const events = [
+  { name: "Makar Sankranti", date: "01-14" },
+  { name: "Pongal", date: "01-15" },
+  { name: "Vasant Panchami", date: "02-02" },
+  { name: "Ratha Saptami", date: "02-05" },
+  { name: "Maha Shivratri", date: "02-26" },
+  { name: "Holika Dahan", date: "03-13" },
+  { name: "Holi", date: "03-14" },
+  { name: "Chaitra Navratri Begins", date: "03-20" },
+  { name: "Ram Navami", date: "04-06" },
+  { name: "Hanuman Jayanti", date: "04-10" },
+  { name: "Akshaya Tritiya", date: "04-18" },
+  { name: "Narada Jayanti", date: "05-03" },
+  { name: "Narasimha Jayanti", date: "05-04" },
+  { name: "Buddha Purnima", date: "05-15" },
+  { name: "Ganga Dussehra", date: "06-14" },
+  { name: "Nirjala Ekadashi", date: "06-17" },
+  { name: "Jagannath Rath Yatra", date: "07-12" },
+  { name: "Guru Purnima", date: "07-27" },
+  { name: "Nag Panchami", date: "08-16" },
+  { name: "Raksha Bandhan", date: "08-26" },
+  { name: "Janmashtami", date: "09-04" },
+  { name: "Ganesh Chaturthi", date: "09-14" },
+  { name: "Hartalika Teej", date: "09-17" },
+  { name: "Anant Chaturdashi", date: "09-24" },
+  { name: "Pitru Paksha Begins", date: "09-25" },
+  { name: "Mahalaya Amavasya", date: "10-11" },
+  { name: "Sharad Navratri Begins", date: "10-12" },
+  { name: "Durga Ashtami", date: "10-19" },
+  { name: "Mahanavami", date: "10-20" },
+  { name: "Dussehra (Vijayadashami)", date: "10-21" },
+  { name: "Karva Chauth", date: "10-28" },
+  { name: "Ahoi Ashtami", date: "10-31" },
+  { name: "Dhanteras", date: "11-07" },
+  { name: "Choti Diwali", date: "11-08" },
+  { name: "Diwali", date: "11-09" },
+  { name: "Govardhan Puja", date: "11-10" },
+  { name: "Bhai Dooj", date: "11-11" },
+  { name: "Chhath Puja", date: "11-13" },
+  { name: "Dev Deepawali", date: "11-23" },
+  { name: "Kartik Purnima", date: "11-23" },
+  { name: "Gita Jayanti", date: "12-19" },
+  { name: "Vaikuntha Ekadashi", date: "12-28" },
+  { name: "Lohri", date: "01-13" },
+  { name: "Basoda", date: "03-21" },
+  { name: "Sheetala Ashtami", date: "03-22" },
+  { name: "Yamuna Chhath", date: "04-07" },
+  { name: "Parashurama Jayanti", date: "05-11" },
+  { name: "Vat Savitri Vrat", date: "06-05" },
+  { name: "Hariyali Teej", date: "08-09" },
+  { name: "Onam", date: "08-30" },
+  { name: "Republic Day", date: "01-26" },
+  { name: "Martyrs' Day (Mahatma Gandhi)", date: "01-30" },
+  { name: "Shaheed Diwas (Bhagat Singh)", date: "03-23" },
+  { name: "Kargil Vijay Diwas", date: "07-26" },
+  { name: "Independence Day", date: "08-15" },
+  { name: "National Sports Day", date: "08-29" },
+  { name: "Gandhi Jayanti", date: "10-02" },
+  { name: "Indian Air Force Day", date: "10-08" },
+  { name: "Police Commemoration Day", date: "10-21" },
+  { name: "National Unity Day (Sardar Patel Jayanti)", date: "10-31" },
+  { name: "Constitution Day", date: "11-26" },
+  { name: "Indian Navy Day", date: "12-04" },
+  { name: "Armed Forces Flag Day", date: "12-07" },
+  { name: "Vijay Diwas", date: "12-16" },
+  { name: "Netaji Subhas Chandra Bose Jayanti", date: "01-23" },
+  { name: "Parakram Diwas", date: "01-23" },
+  { name: "National Voters' Day", date: "01-25" },
+  { name: "National Youth Day (Swami Vivekananda Jayanti)", date: "01-12" },
+  { name: "Lal Bahadur Shastri Jayanti", date: "10-02" },
+  { name: "Army Day", date: "01-15" }
+];
+
+      const container = document.getElementById('events-container');
+      const searchInput = document.getElementById('search-input');
+
+      function safeId(str) {
+        return str.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+      }
+
+      function getFullDateString(mmdd) {
+        const [month, day] = mmdd.split("-").map(x => parseInt(x));
+        const now = new Date();
+        let year = now.getFullYear();
+        const eventDate = new Date(year, month - 1, day);
+        if (eventDate < new Date().setHours(0, 0, 0, 0)) {
+          year += 1;
+        }
+        return { dateObj: new Date(year, month - 1, day), text: `${String(day).padStart(2, '0')}-${String(month).padStart(2, '0')}-${year}` };
+      }
+
+      function createEventCard(event) {
+        const eventId = safeId(event.name);
+        const { dateObj, text } = getFullDateString(event.date);
+
+        const card = document.createElement('div');
+        card.className = 'bg-gray-900 p-4 rounded-xl shadow-md';
+        card.dataset.eventName = event.name.toLowerCase();
+
+        card.innerHTML = `
+          <h2 class="text-3xl mb-1">
+            ${event.name}
+            <span class="event-date">${text}</span>
+          </h2>
+          <p id="timer-${eventId}" class="text-sky-400 mb-2">Loading...</p>
+          <div class="progress"><div class="progress-bar" id="progress-${eventId}"></div></div>
+        `;
+        container.appendChild(card);
+
+        function updateCountdown() {
+          const now = new Date();
+          let eventDate = new Date(dateObj);
+
+          if (eventDate < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+            eventDate.setFullYear(now.getFullYear() + 1);
+          }
+
+          const distance = eventDate - now;
+          const timerEl = document.getElementById(`timer-${eventId}`);
+          const progressEl = document.getElementById(`progress-${eventId}`);
+
+          const isToday = eventDate.toDateString() === now.toDateString();
+
+          if (isToday) {
+            timerEl.textContent = "Happening Today";
+            progressEl.classList.add("today");
+            progressEl.style.width = "100%";
+          } else if (distance <= 0) {
+            timerEl.textContent = "🎉 Event started!";
+            progressEl.classList.remove("today");
+            progressEl.style.width = "100%";
+          } else {
+            progressEl.classList.remove("today");
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            timerEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s left`;
+
+            const startOfYear = new Date(now.getFullYear(), 0, 1).getTime();
+            const total = eventDate.getTime() - startOfYear;
+            const elapsed = now.getTime() - startOfYear;
+            const percent = Math.min(100, (elapsed / total) * 100);
+            progressEl.style.width = `${percent.toFixed(2)}%`;
+          }
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+      }
+
+      events.forEach(createEventCard);
+
+      searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+        document.querySelectorAll("#events-container > div").forEach(card => {
+          const name = card.dataset.eventName;
+          card.style.display = name.includes(query) ? "block" : "none";
+        });
+      });
+    });
+  </script>
+</body>
+</html>
